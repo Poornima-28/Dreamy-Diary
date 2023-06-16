@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dreamy Diary - Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+   <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0/css/select2.min.css" rel="stylesheet" />
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url("https://img.freepik.com/free-photo/spring-floral-border-background-green-with-leaf-watercolor-illustration_53876-126807.jpg?w=2000&t=st=1685994971~exp=1685995571~hmac=ed353331455226718b5620cbbec52fb7556dd7968dd0824fc64405d83596a3b9");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0.9;
+        }
+
+       .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+/*            background-color: black;*/
+            padding: 10px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+        }
+
+        .navbar .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar .logo a {
+            display: flex;
+            align-items: center;
+            color: black;
+            text-decoration: none;
+            font-size: 30px;
+            font-family: 'Segoe Script';
+        }
+
+        .navbar .logo span {
+            margin-left: 10px;
+        }
+
+
+        .navbar .nav-items {
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar .nav-items li {
+            list-style: none;
+            margin-left: 20px;
+        }
+
+        .navbar .nav-items li a {
+            color: black;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        .navbar .nav-items li a:hover {
+            color: #ffcc00;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 80px auto;
+            padding: 50px 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .header h2 {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .logout-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .logout-button {
+            font-size: 16px;
+            color: #dc3545;
+            border: none;
+            background: none;
+            cursor: pointer;
+        }
+
+        .dream-form {
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .star-rating {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 10px;
+        }
+
+        .star-rating label {
+            margin: 0 5px;
+            font-size: 40px;
+            color: #ccc;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .star-rating label:hover,
+        .star-rating label.active {
+            color: #ffbf00;
+        }
+
+        .submit-button {
+            padding: 10px 20px;
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .custom-dropdown .select2-selection__rendered {
+            padding: 0.375rem 0.75rem;
+            background-color: #f8f9fa;
+            border: 1px solid #ced4da;
+            border-radius: 0.25rem;
+        }
+
+        .custom-dropdown .select2-selection__arrow {
+            height: 100%;
+        }
+
+        .custom-container .select2-selection--single {
+            height: 2.375rem;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+    <div class="logo">
+        <a href="#">
+            <img src="https://img.icons8.com/external-flatarticons-blue-flatarticons/65/external-bed-pillows-hotel-services-flatarticons-blue-flatarticons.png" alt="external-bed-pillows-hotel-services-flatarticons-blue-flatarticons" style="width: 40px; height: 40px;">
+            <span>Dreamy Diary</span>
+        </a>
+    </div>
+    <ul class="nav-items">
+        <!-- <li><a href="#">Home</a></li> -->
+        <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+        <li><a href="#" onclick="logout()">Logout</a></li>
+    </ul>
+</nav>
+
+ <div class="container">
+        <div class="header">
+            <h2>Manifest Your Dream</h2>
+            <div class="logout-container">
+                <span>Welcome, {{username}}</span>
+            </div>
+        </div>
+
+        <div class="dream-form">
+            <form  action="{{ url_for('add_dream') }}" method="POST">
+                <div class="form-group">
+                    <label for="dream-title">Dream Title</label>
+                    <input type="text" id="dream-title" name="dream-title" required>
+                </div>
+                <div class="form-group">
+                    <label for="dream-date">Dream Date</label>
+                    <input type="text" id="dream-date" name="dream-date" required>
+                </div>
+               <div class="form-group">
+                <label for="dream-category">Dream Category</label>
+                <select id="dream-category" name="dream-category" required>
+                    <option value="">Select Category</option>
+                    <option value="Adventure">Adventure</option>
+                    <option value="Fantasy">Fantasy</option>
+                    <option value="Romance">Romance</option>
+                    <option value="Mystery">Mystery</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+
+
+
+                <div class="form-group">
+                    <label for="dream-description">Dream Description</label>
+                    <textarea id="dream-description" name="dream-description" rows="5" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="dream-rating">Rate your dream:</label>
+                    <div class="star-rating">
+                        <input type="hidden" name="dream-rating" id="dream-rating" value="">
+                        <label for="star5" data-rating="5"><i class="fas fa-star"></i></label>
+                        <label for="star4" data-rating="4"><i class="fas fa-star"></i></label>
+                        <label for="star3" data-rating="3"><i class="fas fa-star"></i></label>
+                        <label for="star2" data-rating="2"><i class="fas fa-star"></i></label>
+                        <label for="star1" data-rating="1"><i class="fas fa-star"></i></label>
+                    </div>
+                </div>
+                <button type="submit" class="submit-button">Submit</button>
+            </form>
+        </div>
+    </div>
+
+
+    <script>
+        function logout() {
+            fetch('/logout', {
+                method: 'GET',
+            })
+            .then(response => {
+                if (response.redirected) {
+                    window.location.href = response.url;
+                }
+            })
+            .catch(error => {
+                console.error('Logout error:', error);
+            });
+        }
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('.star-rating label').on('click', function() {
+            var rating = $(this).data('rating');
+            console.log('Rating:', rating);
+            $('#dream-rating').val(rating); // Set the value of the hidden input field
+            $(this).addClass('active');
+            $(this).prevAll().addClass('active');
+            $(this).nextAll().removeClass('active');
+        });
+    });
+</script>
+
+
+   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        flatpickr("#dream-date", {
+            enableTime: false,
+            dateFormat: "Y-m-d",
+            maxDate: "today"
+        });
+    </script>
+
+
+
+</body>
+</html>

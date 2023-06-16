@@ -1,0 +1,630 @@
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dreamy Diary - Dashboard</title>
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.0/themes/smoothness/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url("https://img.freepik.com/free-vector/abstract-watercolor-marble-background_91008-185.jpg?w=2000&t=st=1685995794~exp=1685996394~hmac=19e47cf4fe34ec0bd51861160e042ccc4f80cc0972116302608eb008069eb152");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0.9;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+         /*   position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;*/
+        }
+
+        .navbar .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar .logo a {
+            display: flex;
+            align-items: center;
+            color: black;
+            text-decoration: none;
+            font-size: 20px;
+             font-family: 'Segoe Script';
+        }
+
+        .navbar .logo span {
+            margin-left: 10px;
+        }
+
+        .navbar .nav-items {
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar .nav-items li {
+            list-style: none;
+            margin-left: 20px;
+        }
+
+        .navbar .nav-items li a {
+            color: black;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        .navbar .nav-items li a:hover {
+            color: #ffcc00;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1500px;
+            margin: 80px auto;
+            padding: 50px 20px;
+            background-color: rgba(255, 255, 255, 0.5);
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.7);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 40px auto;
+                padding: 30px 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                margin: 20px auto;
+                padding: 20px 5px;
+            }
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .header h2 {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .logout-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .logout-button {
+            font-size: 16px;
+            color: #dc3545;
+            border: none;
+            background: none;
+            cursor: pointer;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid #ccc;
+        }
+
+        table th,
+        table td {
+            border: 1px solid #ccc;
+            padding: 8px;
+        }
+
+        table th {
+            background-color: #f2f2f2;
+        }
+
+        table tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        table tbody tr:hover {
+            background-color: #eaeaea;
+        }
+
+        /* Modal */
+        #editModal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        #editModal .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+
+        #editModal .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        #editModal .close:hover,
+        #editModal .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        #editModal h3 {
+            margin-top: 0;
+        }
+
+        #editModal input,
+        #editModal textarea {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        #editModal button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        #editModal button:hover {
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            #editModal .modal-content {
+                width: 90%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            #editModal .modal-content {
+                width: 95%;
+            }
+        }
+
+        .first_row .row {
+          width: 95%;
+        /*  max-width: 1200px;*/
+          display: grid;
+          grid-template-columns: 30% 70%;
+          margin: 0 auto;
+          padding: 20px;
+          justify-content: space-between; /* Add this property to distribute space between elements */
+        }
+
+        .first_row .col-30 {
+          /*flex: 1;
+          max-width: 30%;*/
+          padding: 5px;
+        }
+
+        .first_row .col-70 {
+          /*flex: 1;
+          max-width: 70%;*/
+          padding: 5px;
+        }
+
+        .second_row .row {
+          width: 95%;
+        /*  max-width: 1200px;*/
+          display: grid;
+          grid-template-columns: 33.33% 33.33% 33.33%;
+          margin: 0 auto;
+          padding: 20px;
+          justify-content: space-between; /* Add this property to distribute space between elements */
+        }
+
+        .second_row .col-33 {
+          /*flex: 1;
+          max-width: 30%;*/
+          padding: 5px;
+        }
+
+        .third_row .row {
+          width: 95%;
+        /*  max-width: 1200px;*/
+          display: grid;
+          grid-template-columns: 33.33% 33.33% 33.33%;
+          margin: 0 auto;
+          padding: 20px;
+          justify-content: space-between; /* Add this property to distribute space between elements */
+        }
+
+        .third_row .col-33 {
+          /*flex: 1;
+          max-width: 30%;*/
+          padding: 5px;
+        }
+
+       .chart-container {
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 5px;
+  padding: 20px;
+  margin-bottom: 20px;
+  height: 100%;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+
+        /*.first_row {
+          margin: 0 -10px; /* Add negative margin to remove spacing at the corners of the screen */
+        }*/
+
+        /* styles.css */
+
+.search-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #f5f5f5;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.search-box input[type="text"] {
+  flex-grow: 1;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  padding: 5px;
+  background-color: transparent;
+}
+
+/* styles.css */
+
+.search-box input[type="text"] {
+  flex-grow: 1;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  padding: 10px;
+  background-color: white;
+  width: 300px; /* Adjust the width to your preference */
+}
+
+
+.clear-button {
+  color: #ff6f00;
+  text-decoration: none;
+  margin-left: 10px;
+  font-size: 16px;
+}
+
+.clear-button:hover {
+  text-decoration: underline;
+}
+
+
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <a href="#">
+                <img src="https://img.icons8.com/external-flatarticons-blue-flatarticons/65/external-bed-pillows-hotel-services-flatarticons-blue-flatarticons.png" alt="external-bed-pillows-hotel-services-flatarticons-blue-flatarticons" style="width: 40px; height: 40px;">
+                <span>Dreamy Diary</span>
+            </a>
+        </div>
+        <ul class="nav-items">
+            <li><a href="{{ url_for('home') }}">Home</a></li>
+            <li><a href="#" onclick="logout()">Logout</a></li>
+        </ul>
+    </nav>
+
+<div class="container">
+    <div class="header">
+        <h2>Your Dream List, {{ username }}</h2>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Date</th>
+                <th>Category</th>
+                <th>Description</th>
+                <th>Rating</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for dream in latest_dreams %}
+            <tr>
+                <td>
+                    <span id="title-{{ dream['_id'] }}">{{ dream['dream-title'] }}</span>
+                    <input type="text" id="input-title-{{ dream['_id'] }}" style="display: none;">
+                </td>
+                <td>
+                    <span id="date-{{ dream['_id'] }}">{{ dream['dream_date'] }}</span>
+                    <input type="date" id="input-date-{{ dream['_id'] }}" style="display: none;">
+                </td>
+                <td>
+                    <span id="category-{{ dream['_id'] }}">{{ dream['dream_category'] }}</span>
+                    <select id="input-category-{{ dream['_id'] }}" style="display: none;">
+                        <option value="Adventure">Adventure</option>
+                        <option value="Fantasy">Fantasy</option>
+                        <option value="Romance">Romance</option>
+                        <option value="Mystery">Mystery</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </td>
+                <td>
+                    <span id="description-{{ dream['_id'] }}">{{ dream['dream_description'] }}</span>
+                    <textarea id="input-description-{{ dream['_id'] }}" style="display: none;"></textarea>
+                </td>
+                <td>
+                    <span id="rating-{{ dream['_id'] }}">{{ dream['dream_rating'] }}</span>
+                    <input type="number" id="input-rating-{{ dream['_id'] }}" min="1" max="5" style="display: none;">
+                </td>
+                <td>
+                    <a href="#" onclick="editDream('{{ dream['_id'] }}')"> <!-- Edit Icon -->
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    <a href="#" onclick="saveDream('{{ dream['_id'] }}')" style="display: none;"> <!-- Save Icon -->
+                        <i class="fas fa-save"></i>
+                    </a>
+                    <a href="#" onclick="deleteDream('{{ dream['_id'] }}')"> <!-- Delete Icon -->
+                        <i class="fas fa-trash"></i>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+<div class="first_row">
+  <div class="row">
+    <!-- Top Words Table -->
+    <div class="col-30">
+      <div class="chart-container">
+        <h2>Top Words related to your dreams</h2>
+        <div id="top-words-chart">{{ top_words | safe }}</div>
+      </div>
+    </div>
+    <!-- Dreams Over Time Chart -->
+    <div class="col-70">
+      <div class="chart-container">
+        <h2>Dreams Over Time</h2>
+        <div id="dreams-over-time-chart">{{ dreams_over_time_chart | safe }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="second_row">
+  <div class="row">
+   <div class="col-33">
+      <div class="chart-container">
+        <h2>Dreams Per Category</h2>
+        <div id="dreams-per-category-chart">{{ dreams_per_category_chart | safe }}</div>
+      </div>
+    </div>
+    <!-- Dreams Per Category Over Time Chart -->
+    <div class="col-33">
+      <div class="chart-container">
+        <h2>Dreams Per Category Over Time</h2>
+        <div id="dreams-per-category-over-time-chart">{{ dreams_per_category_over_time_chart | safe }}</div>
+      </div>
+    </div>
+    <!-- Percentage of Dream Category Over Time Chart -->
+    <div class="col-33">
+      <div class="chart-container">
+        <h2>Percentage of Dream Category Over Time</h2>
+        <div id="dreams_per_category_over_time_percent">{{ dreams_per_category_over_time_percent | safe }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="third_row">
+  <div class="row">
+   <div class="col-33">
+      <div class="chart-container">
+        <h2>Dreams Per Rating</h2>
+        <div id="dreams-per-rating-chart">{{ dreams_per_rating_chart | safe }}</div>
+      </div>
+    </div>
+    <!-- Dreams Per Category Over Time Chart -->
+    <div class="col-33">
+      <div class="chart-container">
+        <h2>Dreams Per Rating Over Time</h2>
+        <div id="dreams-per-rating-over-time-chart">{{ dreams_per_rating_over_time_chart | safe }}</div>
+      </div>
+    </div>
+    <!-- Percentage of Dream Category Over Time Chart -->
+    <div class="col-33">
+      <div class="chart-container">
+        <h2>Percentage of Dream Rating Over Time</h2>
+        <div id="dreams_per_rating_over_time_percent">{{ dreams_per_rating_over_time_percent | safe }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<script>
+
+        function logout() {
+            fetch('/logout', {
+                method: 'GET',
+            })
+            .then(response => {
+                if (response.redirected) {
+                    window.location.href = response.url;
+                }
+            })
+            .catch(error => {
+                console.error('Logout error:', error);
+            });
+        }
+    </script>
+
+<script>
+    function editDream(dreamId) {
+        // Show input fields and hide span elements
+        $('#title-' + dreamId).hide();
+        $('#input-title-' + dreamId).val($('#title-' + dreamId).text()).show();
+        $('#date-' + dreamId).hide();
+        $('#input-date-' + dreamId).val($('#date-' + dreamId).text()).show();
+        $('#category-' + dreamId).hide();
+        $('#input-category-' + dreamId).val($('#category-' + dreamId).text()).show();
+        $('#description-' + dreamId).hide();
+        $('#input-description-' + dreamId).val($('#description-' + dreamId).text()).show();
+        $('#rating-' + dreamId).hide();
+        $('#input-rating-' + dreamId).val($('#rating-' + dreamId).text()).show();
+
+        // Show save icon and hide edit icon
+        $('a[onclick="editDream(\'' + dreamId + '\')"]').hide();
+        $('a[onclick="saveDream(\'' + dreamId + '\')"]').show();
+    }
+
+    function saveDream(dreamId) {
+        var title = $('#input-title-' + dreamId).val();
+        var date = $('#input-date-' + dreamId).val();
+        var category = $('#input-category-' + dreamId).val();
+        var description = $('#input-description-' + dreamId).val();
+        var rating = $('#input-rating-' + dreamId).val();
+
+        // Perform validation for date, rating, and category
+        var currentDate = new Date();
+        var selectedDate = new Date(date);
+
+        // Validate the fields
+        if (!title || !date || !category || !description || !rating) {
+            alert("Please fill in all the fields.");
+            return;
+        }
+
+        if (selectedDate > currentDate) {
+            alert('Please select a date up to today.');
+            return;
+        }
+
+        if (rating < 1 || rating > 5) {
+            alert('Please enter a rating between 1 and 5.');
+            return;
+        }
+
+        var validCategories = ['Adventure', 'Fantasy', 'Romance', 'Mystery', 'Other'];
+        if (!validCategories.includes(category)) {
+            alert('Please select a valid category.');
+            return;
+        }
+
+        // Send AJAX request to update dream
+        $.ajax({
+            url: '/update_dream',
+            method: 'POST',
+            data: {
+                dreamId: dreamId,
+                title: title,
+                date: date,
+                category: category,
+                description: description,
+                rating: rating
+            },
+            success: function(response) {
+                // Update span elements with new values
+                $('#title-' + dreamId).text(title).show();
+                $('#date-' + dreamId).text(date).show();
+                $('#category-' + dreamId).text(category).show();
+                $('#description-' + dreamId).text(description).show();
+                $('#rating-' + dreamId).text(rating).show();
+
+                // Hide input fields
+                $('#input-title-' + dreamId).hide();
+                $('#input-date-' + dreamId).hide();
+                $('#input-category-' + dreamId).hide();
+                $('#input-description-' + dreamId).hide();
+                $('#input-rating-' + dreamId).hide();
+
+                // Show edit icon and hide save icon
+                $('a[onclick="editDream(\'' + dreamId + '\')"]').show();
+                $('a[onclick="saveDream(\'' + dreamId + '\')"]').hide();
+            },
+            error: function(xhr, status, error) {
+                // Handle error response
+                console.error(error);
+                // Perform any error handling or display error messages
+            }
+        });
+    }
+
+function deleteDream(dreamId) {
+    if (confirm("Are you sure you want to delete this dream?")) {
+        $.ajax({
+            url: '/delete_dream',
+            method: 'POST',
+            data: { dreamId: dreamId },
+            success: function(response) {
+                // Parse the response JSON to check if the dream was deleted successfully
+                var result = JSON.parse(response);
+                if (result.message === 'Dream deleted successfully') {
+                    // Refresh the page after successful deletion
+                    location.reload();
+                } else {
+                    console.error(result.message);
+                    // Perform any error handling or display error messages
+                }
+            },
+            error: function(xhr, status, error) {
+                // Handle error response
+                console.error(error);
+                // Perform any error handling or display error messages
+            }
+        });
+    }
+}
+</script>
+
+</body>
+</html>
